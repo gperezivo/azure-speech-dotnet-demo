@@ -1,8 +1,14 @@
+- [azure-speech-dotnet-demo](#azure-speech-dotnet-demo)
+  - [Info](#info)
+    - [ADVERTENCIA: Versión inferior a .NET 6](#advertencia-versión-inferior-a-net-6)
+  - [Speech to text](#speech-to-text)
+  - [Speech translator](#speech-translator)
+
 # azure-speech-dotnet-demo
 
 ## Info
 
-La solución está hecha con [Visual Studio 2022 Preview](https://visualstudio.microsoft.com/es/vs/preview/) y usa [.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0) con su versión actual (RC-1)
+La solución está hecha con [Visual Studio 2022 Preview](https://visualstudio.microsoft.com/es/vs/preview/) y usa __[.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0)__ con su versión actual (RC-1)
 
 Para cambiar la versión de .NET cambiar en el fichero [Directory.Build.props](./Directory.Build.props) el valor de __TargetFrameworkVersion__ por la versión deseada
 [Supported Target Framework](https://docs.microsoft.com/en-us/dotnet/standard/frameworks#supported-target-frameworks)
@@ -17,7 +23,7 @@ Para cambiar la versión de .NET cambiar en el fichero [Directory.Build.props](.
 ```
 Esto cambiará el framework para todos los proyectos del repositorio.
 
-### ADVERTENCIA ###
+### ADVERTENCIA: Versión inferior a .NET 6 ###
 > Los proyectos están usando funcionalidades de __.NET 6__
 > 
 > Si cambias el target framework deberás de modificar el [Program.cs](./speech-to-text/Program.cs) para incluir la definición del namespace
