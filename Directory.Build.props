@@ -1,0 +1,19 @@
+<Project>
+	<PropertyGroup Label="Project versions">
+		<TargetFrameworkVersion>net6.0</TargetFrameworkVersion>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+  <PropertyGroup Label="Cognitive Services Nuget Version">
+    <SpeechNugetVersion>1.18.0</SpeechNugetVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="DotNet Configuration Nuget Version">
+    <MSExtensionsConfigurationNugetVersion>5.0.0</MSExtensionsConfigurationNugetVersion>
+  </PropertyGroup>
+
+
+  <ItemGroup Label="Dotnet Configuration nuget reference">
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="$(MSExtensionsConfigurationNugetVersion)" />
+  </ItemGroup>
+</Project>
