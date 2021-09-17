@@ -17,6 +17,34 @@ Para cambiar la versión de .NET cambiar en el fichero [Directory.Build.props](.
 ```
 Esto cambiará el framework para todos los proyectos del repositorio.
 
+### ADVERTENCIA ###
+> Los proyectos están usando funcionalidades de __.NET 6__
+> 
+> Si cambias el target framework deberás de modificar el [Program.cs](./speech-to-text/Program.cs) para incluir la definición del namespace
+> y el típico static async Task Main(string[] args). 
+> 
+> Tendrás que poner todo el código que hay dentro de este método quedando algo así:
+
+```csharp
+using Microsoft.CognitiveServices.Speech;
+using Microsoft.CognitiveServices.Speech.Audio;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Threading.Tasks;
+
+namespace SpeechToText
+{
+    public class Program
+    {
+        public static async Task Main(string[] args)
+        {
+            
+         	//Inserta aquí todo el código actual de Program.cs
+        }
+    }
+}
+```
+
 ## Speech to text
 En el ejemplo se utiliza la transcripción continua por eventos.
 
