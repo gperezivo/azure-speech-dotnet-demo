@@ -5,21 +5,17 @@ using System;
 using System.Threading.Tasks;
 
 var config = new ConfigurationBuilder()
-    .AddJsonFile("appsettings.json")
-    .AddJsonFile("appsettings.Development.json", optional: true)
+    .AddMySpeechConfig()
     .Build();
 
-var speechServiceEndpoint = new Uri(config.GetSection("SpeechService:Endpoint").Value);
-var speechServiceKey= config.GetSection("SpeechService:Key").Value;
-var speechServiceRegion = config.GetSection("SpeechService:Region").Value;
-var language = config.GetSection("SpeechService:ToLanguage").Value;
+var speechSettings = config.GetSpeechServiceSettings();
 
-var speechConfig = SpeechConfig.FromSubscription(speechServiceKey, speechServiceRegion);
+var speechConfig = speechSettings.SpeechConfig;
 var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
 
 var stopRecognition = new TaskCompletionSource<int>();
 
-using var speechRecognizer = new SpeechRecognizer(speechConfig,language,audioConfig);
+using var speechRecognizer = new SpeechRecognizer(speechConfig,speechSettings.Language,audioConfig);
 
 speechRecognizer.SessionStopped += (sender, @event) =>
 {

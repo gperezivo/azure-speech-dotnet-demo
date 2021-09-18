@@ -3,8 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>$(TargetFrameworkVersion)</TargetFramework>
-    <RootNamespace>speech_to_text</RootNamespace>
     <LangVersion>$(LangVersion)</LangVersion>
+    <RootNamespace>speech_to_text</RootNamespace>
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,10 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SharedComponents\SharedComponents.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="appsettings.Development.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
