@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "speaker-recognition", "speech-recognizer\speaker-recognition.csproj", "{0B7D8298-CD88-4403-80E7-9A2E1868B480}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "speaker-recognition", "speaker-recognition\speaker-recognition.csproj", "{0B7D8298-CD88-4403-80E7-9A2E1868B480}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedComponents", "SharedComponents\SharedComponents.csproj", "{4714B338-11D7-49D7-B046-93461C91B326}"
 EndProject
