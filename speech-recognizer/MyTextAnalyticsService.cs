@@ -16,6 +16,11 @@ public class MyTextAnalyticsService
         );
     }
 
+    public async Task<IEnumerable<string>> GetKeyPhrases(string document)
+    {
+        var response = await _client.ExtractKeyPhrasesAsync(document);
+        return response.Value.Select(x=>x.ToString());
+    }
     public async Task<string> GetFirstPersonEntity(string document)
     {
 
@@ -26,7 +31,7 @@ public class MyTextAnalyticsService
             .OrderBy(x => x.Offset)?
             .FirstOrDefault();
 
-        return name?.Text ?? "Unknow User";
+        return name?.Text ?? "Unknown User";
         
         
 

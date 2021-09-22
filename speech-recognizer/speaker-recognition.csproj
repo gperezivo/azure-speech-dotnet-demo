@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Azure.AI.TextAnalytics" Version="$(TextAnalyticsNugetVersion)" />
     <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="$(SpeechNugetVersion)" />
+    <PackageReference Include="NAudio.Core" Version="2.0.0" />
     
   </ItemGroup>
   
@@ -29,6 +30,9 @@
     <None Update="assets\recognize\recognize-2.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="assets\recognize\recognize-3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="assets\recognize\recognize.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -36,6 +40,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="assets\train\presentacion-2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\train\presentacion.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

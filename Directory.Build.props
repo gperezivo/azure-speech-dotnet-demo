@@ -4,6 +4,10 @@
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
+  <PropertyGroup Label ="Audio Nuget Versions">
+    <NAudioNugetVersion></NAudioNugetVersion>
+    
+  </PropertyGroup>
   <PropertyGroup Label="Cognitive Services Nuget Version">
     <SpeechNugetVersion>1.18.0</SpeechNugetVersion>
     <TextAnalyticsNugetVersion>5.1.0</TextAnalyticsNugetVersion>

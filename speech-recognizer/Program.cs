@@ -2,7 +2,9 @@
 using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.CognitiveServices.Speech.Speaker;
 using Microsoft.Extensions.Configuration;
+using NAudio.Wave;
 using speaker_recognition;
+using System.Collections.Concurrent;
 
 Console.ForegroundColor = ConsoleColor.White; 
 var config = new ConfigurationBuilder()
@@ -19,74 +21,72 @@ var speechConfig = speechSettings.SpeechConfig;
 var textAnalytics = new MyTextAnalyticsService(textAnalyticsSettings);
 var speechService = new MySpeechService(speechSettings);
 
-//Obtenemos los audios 
-var trainAudios = Directory.GetFiles("./assets/train", "*.wav");
 
 var recognizedNames = new Dictionary<string,(string name, VoiceProfile profile)>();
-
 speechConfig.SpeechRecognitionLanguage = speechSettings.Language;
 
 using var profileClient = new VoiceProfileClient(speechConfig);
 
-
 var defaultColor = ConsoleColor.Gray;
+foreach(var audio in Directory.GetFiles("./assets/train", "*.wav"))
+ {
 
-foreach (var audio in trainAudios)
-{
+     Console.ForegroundColor = defaultColor;
+     //Console.WriteLine($"Getting text from {audio}");
+     var document = await speechService.WavFileToText(audio);
+     // Console.WriteLine(document);
+     Console.WriteLine("Searching name...");
+     var name = await textAnalytics.GetFirstPersonEntity(document);
+     Console.WriteLine($"First name in {audio}: {name}");
 
-    Console.ForegroundColor = defaultColor;
-    //Console.WriteLine($"Getting text from {audio}");
-    var document = await speechService.WavFileToText(audio);
-   // Console.WriteLine(document);
-    Console.WriteLine("Searching name...");
-    var name = await textAnalytics.GetFirstPersonEntity(document);
-    Console.WriteLine($"First name in {audio}: {name}");
+     var profile = await profileClient.CreateProfileAsync(
+         VoiceProfileType.TextIndependentIdentification,
+         speechSettings.Language.ToLower()
+         );
 
-    var profile = await profileClient.CreateProfileAsync(
-        VoiceProfileType.TextIndependentIdentification,
-        speechSettings.Language.ToLower()
-        );
-        
-    var result = await profileClient.EnrollProfileAsync(profile, AudioConfig.FromWavFileInput(audio));
-    var speakerRecognizer = new SpeakerRecognizer(speechConfig, AudioConfig.FromWavFileInput(audio));
-    
-    if(result.Reason == ResultReason.EnrolledVoiceProfile)
-    {        
-        var verificationModel = SpeakerVerificationModel.FromProfile(profile);
-        var verificationResult = await speakerRecognizer.RecognizeOnceAsync(verificationModel);
-        if(verificationResult.Reason == ResultReason.RecognizedSpeakers)
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Profile {profile.Id} assigned to {name}");
-            recognizedNames.Add(profile.Id, new(name, profile));
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            if (verificationResult.Reason == ResultReason.Canceled)
-            {                
-                Console.WriteLine(SpeakerRecognitionCancellationDetails.FromResult(verificationResult).Reason);
-                Console.WriteLine(SpeakerRecognitionCancellationDetails.FromResult(verificationResult).ErrorDetails);
-            }
-            Console.WriteLine("Failed on profile verification");
-            await profileClient.DeleteProfileAsync(profile);
-        }
-        
-        
-    }
-    else
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"Invalid enroll request: {result.Reason}");
-        await profileClient.DeleteProfileAsync(profile);
-    }
-}
+     var result = await profileClient.EnrollProfileAsync(profile, AudioConfig.FromWavFileInput(audio));
+     var speakerRecognizer = new SpeakerRecognizer(speechConfig, AudioConfig.FromWavFileInput(audio));
 
-var recognizeVoicesFiles = Directory.GetFiles("./assets/recognize", "*.wav");
+     if (result.Reason == ResultReason.EnrolledVoiceProfile)
+     {
+         var verificationModel = SpeakerVerificationModel.FromProfile(profile);
+         var verificationResult = await speakerRecognizer.RecognizeOnceAsync(verificationModel);
+         if (verificationResult.Reason == ResultReason.RecognizedSpeakers)
+         {
+             Console.ForegroundColor = ConsoleColor.Green;
+             Console.WriteLine($"Profile {profile.Id} assigned to {name}");
+             recognizedNames.Add(profile.Id, new(name, profile));
+         }
+         else
+         {
+             Console.ForegroundColor = ConsoleColor.Red;
+             if (verificationResult.Reason == ResultReason.Canceled)
+             {
+                 Console.WriteLine(SpeakerRecognitionCancellationDetails.FromResult(verificationResult).Reason);
+                 Console.WriteLine(SpeakerRecognitionCancellationDetails.FromResult(verificationResult).ErrorDetails);
+             }
+             Console.WriteLine("Failed on profile verification");
+             await profileClient.DeleteProfileAsync(profile);
+         }
+     }
+     else
+     {
+         Console.ForegroundColor = ConsoleColor.Red;
+         Console.WriteLine($"Invalid enroll request: {result.Reason}");
+         await profileClient.DeleteProfileAsync(profile);
+     }
+
+ }
+
+
 var profiles = recognizedNames.Values.Select(p => p.profile).ToList();
 var model = SpeakerIdentificationModel.FromProfiles(profiles);
-foreach(var voiceFile in recognizeVoicesFiles)
+foreach(var voiceFile in Directory.GetFiles("./assets/recognize", "*.wav"))
 {
+
+    var text = await speechService.WavFileToText(voiceFile);
+    var keyPhrases = await textAnalytics.GetKeyPhrases(text);
+    
     Console.ForegroundColor = defaultColor;
     Console.WriteLine($"Recognizing speakers in {voiceFile}");
     using var speakerRecognizer = new SpeakerRecognizer(
@@ -99,7 +99,11 @@ foreach(var voiceFile in recognizeVoicesFiles)
     {
         var recognizedName = recognizedNames.ContainsKey(result.ProfileId) ? recognizedNames[result.ProfileId].name : "Unknown Speaker";
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"{recognizedName} is talking in {voiceFile}");
+        Console.WriteLine(
+            $"{recognizedName} is talking about: {Environment.NewLine}\t"+
+            $"{string.Join($"{Environment.NewLine}\t",keyPhrases??new string[] { })}"+
+            $"{Environment.NewLine}in {voiceFile}"
+        );
     }
     else
     {        
