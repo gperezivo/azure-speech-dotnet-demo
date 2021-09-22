@@ -32,13 +32,13 @@ foreach(var audio in Directory.GetFiles("./assets/train", "*.wav"))
  {
 
      Console.ForegroundColor = defaultColor;
-     //Console.WriteLine($"Getting text from {audio}");
+     Console.WriteLine($"Analyzing text from {audio}");
      var document = await speechService.WavFileToText(audio);
-     // Console.WriteLine(document);
+     
      Console.WriteLine("Searching name...");
      var name = await textAnalytics.GetFirstPersonEntity(document);
-     Console.WriteLine($"First name in {audio}: {name}");
-
+     
+    Console.WriteLine($"First name in {audio}: {name}");
      var profile = await profileClient.CreateProfileAsync(
          VoiceProfileType.TextIndependentIdentification,
          speechSettings.Language.ToLower()
@@ -85,13 +85,16 @@ foreach(var voiceFile in Directory.GetFiles("./assets/recognize", "*.wav"))
 {
 
     var text = await speechService.WavFileToText(voiceFile);
+    Console.ForegroundColor = defaultColor;
+    Console.WriteLine("Analyzing key phrases");
     var keyPhrases = await textAnalytics.GetKeyPhrases(text);
     
-    Console.ForegroundColor = defaultColor;
+    
     Console.WriteLine($"Recognizing speakers in {voiceFile}");
     using var speakerRecognizer = new SpeakerRecognizer(
         speechConfig,
-        AudioConfig.FromWavFileInput(voiceFile));
+        AudioConfig.FromWavFileInput(voiceFile)
+    );
     var result = await speakerRecognizer.RecognizeOnceAsync(model);
     Console.ForegroundColor = ConsoleColor.DarkYellow;
     Console.WriteLine(result.ToString());
