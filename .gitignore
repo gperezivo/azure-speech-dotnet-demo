@@ -349,3 +349,4 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 /speech-to-text/appsettings.Development.json
+/SharedComponents/appsettings.Development.json

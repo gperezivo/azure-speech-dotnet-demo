@@ -4,16 +4,23 @@
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
+  <PropertyGroup Label ="Audio Nuget Versions">
+    <NAudioNugetVersion></NAudioNugetVersion>
+    
+  </PropertyGroup>
   <PropertyGroup Label="Cognitive Services Nuget Version">
     <SpeechNugetVersion>1.18.0</SpeechNugetVersion>
+    <TextAnalyticsNugetVersion>5.1.0</TextAnalyticsNugetVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="DotNet Configuration Nuget Version">
     <MSExtensionsConfigurationNugetVersion>5.0.0</MSExtensionsConfigurationNugetVersion>
+    <NewtonsoftJsonNugetVersion>13.0.1</NewtonsoftJsonNugetVersion>
   </PropertyGroup>
 
 
   <ItemGroup Label="Dotnet Configuration nuget reference">
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="$(MSExtensionsConfigurationNugetVersion)" />
+    <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonNugetVersion)" />
   </ItemGroup>
 </Project>
