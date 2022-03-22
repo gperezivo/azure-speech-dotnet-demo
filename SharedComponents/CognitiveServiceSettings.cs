@@ -25,3 +25,23 @@ public class SpeechServiceSettings: LanguageServiceSettings
     }
 }
 
+public class SpeechTranslationSettings : LanguageServiceSettings
+{
+    public SpeechTranslationConfig SpeechTranslationConfig
+    {
+        get 
+        {
+                var config = SpeechTranslationConfig.FromSubscription(Key, Region);
+                config.SpeechRecognitionLanguage = Language;
+                foreach(var lang in ToLanguage)
+                {
+                    config.AddTargetLanguage(lang);
+                }
+                return config;
+                
+        }
+            
+    }
+    public List<string> ToLanguage {get;set;}
+}
+
